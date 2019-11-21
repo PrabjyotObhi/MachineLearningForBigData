@@ -1,11 +1,9 @@
+#import Everything 
 import numpy as np
 import scipy as sp
 import pandas as pd
-
 from sklearn.preprocessing import Imputer
 from sklearn.neighbors import KNeighborsClassifier
-
-
 from sklearn.model_selection import train_test_split 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.tree import DecisionTreeRegressor
@@ -14,19 +12,15 @@ from sklearn.externals.six import StringIO
 from sklearn.preprocessing import OneHotEncoder
 from sklearn import preprocessing
 from sklearn.linear_model import LinearRegression
-
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import cross_val_score
 import matplotlib.pyplot as plt
-
 get_ipython().run_line_magic('matplotlib', 'inline')
-
 import numpy as np
 import scipy as sp
 from sklearn.tree import DecisionTreeClassifier #This is the library that implements the Decision Tree classifier 
 from sklearn.model_selection import train_test_split #used to split the dataset into training and test data
-
 from sklearn.tree import export_graphviz
 from sklearn import tree
 from IPython.display import Image
@@ -35,28 +29,23 @@ import pydotplus
 import graphviz
 from matplotlib import pyplot
 from preamble import *
-
 import matplotlib.pyplot as plt
 
 
-# # Step 1 preprocessing data
+# Step 1 Preprocessing the Data
 
 #Referenced the Kaggle Assignment in order to start off this portion of preprocessing
 policedata = pd.read_csv('police_project.csv')
-
 policedata= policedata.drop(columns=["county_name"])
 policedata= policedata.dropna()
-
 policedata["is_arrested"]=policedata["is_arrested"].astype("category").cat.codes
 # create y value from specific target
 y=policedata["is_arrested"]
 policedata = policedata.drop(columns=["is_arrested"])
 # policedata = policedata.drop(columns=["stop_outcome_Arrest_Driver"])
 # policedata = policedata.drop(columnes=["stop_outcome_Arrest_Passenger"])
-
 policedata=pd.get_dummies(policedata)
 policedata.head()
-
 # print('Target names:',policedata.columns)
 
 
@@ -67,13 +56,10 @@ y_test
 print('\n x_train',X_train.shape, '\n y_train', y_train.shape, '\n X_test',X_test.shape, '\n y_test', y_test.shape)
 
 
-
+#Decision Tree
 dct = DecisionTreeClassifier(max_depth=3, random_state = 1, criterion = 'entropy', min_impurity_decrease=0.1)
-
 dct.fit(X_train, y_train)
 print('Model trained')
-dct
-
 
 # Predict for the test set
 y_predictions = dct.predict(X_test)
@@ -82,11 +68,8 @@ y_predictions = dct.predict(X_test)
 # Accuracy is calculated by comparing the true results with the predicted results.
 # Accuracy = True prediction in test / Total no of observations in test
 print('Accuracy for given train:test split = ',accuracy_score(y_predictions, y_test))
-
 y_predictions = dct.predict(X_train)
 print('Accuracy for given train:test split = ',accuracy_score(y_predictions, y_train))
-
-
 
 
 #Modified from Decision Tree Iris Assignment
@@ -97,37 +80,22 @@ graph = graphviz.Source(dot_data)
 # graph.render("treepic", view = True)
 Source.from_file('treepic.dot')
 
-
-
-
-
 # set_printoptions(threshold='nan')
 print("Feature importances:\n{}".format(dct.feature_importances_))
 print(len(dct.feature_importances_))
 
 
-# # Gridsearch (In Lecture)
-# *for group pick 3 classifiers at least two hyperparameter tweaks per classifier dont do naive bayes if random forest dont do decision tree
-
-
-# try with random forest classifier 
+#RandomForest Classifier
 rdf = RandomForestClassifier(n_estimators=100, max_depth=2)
-
-
 
 print("Size of training set: {}   size of test set: {}".format(
       X_train.shape[0], X_test.shape[0]))
-
-
 
 rdf.fit(X_train, y_train)
 
 # evaluate the model on the test set using accuracy
 print("Accuracy the training set: {:.3f}".format(rdf.score(X_train, y_train)))
 print("Accuracy the testing set: {:.3f}".format(rdf.score(X_test, y_test)))
-
-
-
 
 #Taken from the RandomForest Decision Tree in class activity
 best_score = 0
@@ -156,8 +124,6 @@ print("Test set score with best parameters: ", test_score)
 
 # # "Naive Bayes" Algorithm
 
-
-
 from sklearn.naive_bayes import GaussianNB
 X_train, X_test, y_train, y_test = train_test_split(policedata, y, test_size=0.4, random_state=1)
 # training the model on the training set
@@ -170,8 +136,6 @@ gnb_pred= gnb.predict(X_test)
 
 from sklearn import metrics
 print("GaussianNB model accuracy: ",metrics.accuracy_score(y_test,gnb_pred))
-
-
 policedata.describe()
 
 
